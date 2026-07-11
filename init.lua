@@ -279,6 +279,10 @@ do
   --  In this section we set up some autocommands to run build
   --  steps for certain plugins after they are installed or updated.
 
+  -- set vim environemtn variable to force mingw
+  vim.env.CC = 'gcc'
+  vim.env.CXX = 'g++'
+
   local function run_build(name, cmd, cwd)
     local result = vim.system(cmd, { cwd = cwd }):wait()
     if result.code ~= 0 then
@@ -738,7 +742,16 @@ do
         },
       },
     },
+
+    roslyn_ls = {
+      cmd = {
+        "roslyn-language-server",
+        "--stdio",
+      },
+    },
   }
+
+
 
   vim.pack.add {
     gh 'neovim/nvim-lspconfig',
@@ -759,6 +772,7 @@ do
   -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
+    'roslyn-language-server',
     -- You can add other tools here that you want Mason to install
   })
 
@@ -904,7 +918,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'c_sharp' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
